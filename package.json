@@ -1,0 +1,40 @@
+{
+  "name": "react-service-manager-demo-server",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "Derek Fong <derek.fong@health.wa.gov.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/derek-fong/react-service-manager-demo-server.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "dependencies": {
+    "apollo-server": "^2.6.7",
+    "graphql": "^14.4.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "husky": "^3.0.0",
+    "lint-staged": "^9.0.2",
+    "prettier": "^1.18.2"
+  }
+}
