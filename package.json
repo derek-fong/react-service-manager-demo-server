@@ -4,7 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "author": "Derek Fong <derek.fong@health.wa.gov.au>",
   "repository": {
@@ -25,6 +25,10 @@
   },
   "prettier": {
     "singleQuote": true
+  },
+  "dependencies": {
+    "apollo-server": "^2.6.7",
+    "graphql": "^14.4.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
