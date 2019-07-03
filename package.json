@@ -12,8 +12,15 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "lint-staged": {
+    "*.{js,json,md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "prettier": {
     "singleQuote": true
@@ -22,6 +29,7 @@
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
     "husky": "^3.0.0",
+    "lint-staged": "^9.0.2",
     "prettier": "^1.18.2"
   }
 }
