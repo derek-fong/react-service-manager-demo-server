@@ -1,15 +1,17 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 
-const typeDefs = gql`
-  type Query {
-    testMessage: String!
-  }
-`;
+const environment = require('./environment');
+const typeDefs = require('./type-defs');
 
-const apolloServer = new ApolloServer({ typeDefs, mocks: true });
+const apolloServer = new ApolloServer({
+  typeDefs,
+  introspection: environment.apollo.introspection,
+  mocks: true,
+  playground: environment.apollo.playground
+});
 
 apolloServer
-  .listen()
+  .listen({ port: environment.port })
   .then(({ url }) => {
     console.log(`Server ready at ${url}. `);
   })
