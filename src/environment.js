@@ -5,5 +5,13 @@ module.exports = {
     introspection: process.env.APOLLO_INTROSPECTION === 'true',
     playground: process.env.APOLLO_PLAYGROUND === 'true'
   },
+  database: {
+    msSql: {
+      database: process.env.DATABASE_MSSQL_DATABASE,
+      password: process.env.DATABASE_MSSQL_PASSWORD,
+      server: process.env.DATABASE_MSSQL_SERVER,
+      user: process.env.DATABASE_MSSQL_USER
+    }
+  },
   port: process.env.PORT || defaultPort
 };

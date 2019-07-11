@@ -28,8 +28,11 @@
     "singleQuote": true
   },
   "dependencies": {
-    "apollo-server": "^2.6.7",
-    "graphql": "^14.4.1"
+    "apollo-server": "^2.6.8",
+    "graphql": "^14.4.2",
+    "graphql-iso-date": "^3.6.1",
+    "has": "^1.0.3",
+    "mssql": "^5.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
