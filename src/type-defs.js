@@ -8,14 +8,14 @@ module.exports = gql`
   """
   enum Status {
     """
-    Item has been registered.
+    Item has been completed.
     """
-    REGISTERED
+    CLOSED
 
     """
-    Item has been scheduled.
+    Item has been fulfilled.
     """
-    SCHEDULED
+    FULFILLED
 
     """
     Item is currently being actioned.
@@ -28,9 +28,9 @@ module.exports = gql`
     PENDING_CUSTOMER
 
     """
-    Item has been completed.
+    Item has been registered.
     """
-    COMPLETED
+    REGISTERED
   }
 
   """
