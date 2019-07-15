@@ -57,7 +57,7 @@ async function addMockRequestsAsync() {
         ('Test Request 1', 'Test request 1', 'REGISTERED', '${now}','he123456'),
         ('Test Request 2', 'Test request 2', 'IN_PROGRESS', '${now}', 'he987654'),
         ('Test Request 3', 'Test request 3', 'PENDING_CUSTOMER', '${now}', 'he123456'),
-        ('Test Request 4', 'Test request 4', 'COMPLETED', '${now}', 'he123456')
+        ('Test Request 4', 'Test request 4', 'FULFILLED', '${now}', 'he123456')
     END
   `;
 
