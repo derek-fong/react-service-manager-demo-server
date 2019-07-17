@@ -86,12 +86,22 @@ module.exports = gql`
     Request creator.
     """
     createdBy: User!
+
+    """
+    Request last update timestamp.
+    """
+    updatedAt: DateTime
+
+    """
+    Request last updater.
+    """
+    updatedBy: User
   }
 
   """
-  Details required for creating new requests.
+  Details required to create a new request.
   """
-  input RequestInput {
+  input CreateRequestInput {
     """
     Request title.
     """
@@ -106,6 +116,31 @@ module.exports = gql`
     Request status.
     """
     status: Status!
+  }
+
+  """
+  Details required to update an existing request.
+  """
+  input UpdateRequestInput {
+    """
+    Request ID.
+    """
+    id: ID!
+
+    """
+    Request title.
+    """
+    title: String
+
+    """
+    Request description.
+    """
+    description: String
+
+    """
+    Request status.
+    """
+    status: Status
   }
 
   type Query {
@@ -124,6 +159,11 @@ module.exports = gql`
     """
     Create a new request.
     """
-    createRequest(requestInput: RequestInput!): Request!
+    createRequest(createRequestInput: CreateRequestInput!): Request!
+
+    """
+    Update an existing request.
+    """
+    updateRequest(updateRequestInput: UpdateRequestInput!): Request!
   }
 `;
