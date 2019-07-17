@@ -22,7 +22,11 @@ async function createRequestsTableAsync() {
         description VARCHAR(100) NOT NULL,
         status VARCHAR(30) NOT NULL,
         created_at DATETIME NOT NULL,
-        creator_id VARCHAR(12) FOREIGN KEY REFERENCES users (id)
+        creator_id VARCHAR(12) NOT NULL FOREIGN KEY REFERENCES users (id)
+          ON DELETE NO ACTION
+          ON UPDAtE NO ACTION,
+        updated_at DATETIME,
+        updater_id VARCHAR(12) FOREIGN KEY REFERENCES users (id)
           ON DELETE NO ACTION
           ON UPDAtE NO ACTION
       )

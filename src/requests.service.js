@@ -1,5 +1,8 @@
-const has = require('has');
+const { UserInputError } = require('apollo-server');
 const sql = require('mssql');
+
+// Using a mock user ID for demo purpose only.
+const mockCurrentUserId = 'he123456';
 
 /**
  * Create request.
@@ -51,7 +54,7 @@ async function getAllRequestsAsync() {
 /**
  * Get request by ID.
  * @param {string} id - Request ID.
- * @returns {Request} - Request with matching ID if found; `undefined` otherwise.
+ * @returns {Request} Request with matching ID if found; `undefined` otherwise.
  */
 async function getRequestByIdAsync(id) {
   let request = undefined;
@@ -71,8 +74,58 @@ async function getRequestByIdAsync(id) {
   return request;
 }
 
+/**
+ * Update request.
+ * @param {UpdateRequestInput} UpdateRequestInput - Details required to update a request.
+ * @returns {Request} Updated request.
+ */
+async function updateRequestAsync({ description, id, status, title }) {
+  const previousRequest = await getRequestByIdAsync(id);
+
+  if (!previousRequest) {
+    throw new UserInputError(`Request with ID: ${id} not found. `);
+  }
+
+  let columnsToUpdate = [];
+
+  if (description && description !== previousRequest.description) {
+    columnsToUpdate.push(`description = '${description}'`);
+  }
+
+  if (status && status !== previousRequest.status) {
+    columnsToUpdate.push(`status = '${status}'`);
+  }
+
+  if (title && title !== previousRequest.title) {
+    columnsToUpdate.push(`title = '${title}'`);
+  }
+
+  if (columnsToUpdate.length === 0) {
+    throw new UserInputError('Invalid update request input. ');
+  }
+
+  const now = new Date()
+    .toISOString()
+    .slice(0, 19)
+    .replace('T', ' ');
+
+  columnsToUpdate.push(`updated_at = '${now}'`);
+  columnsToUpdate.push(`updater_id = '${mockCurrentUserId}'`);
+
+  const updateRequest = `
+    UPDATE requests
+    SET ${columnsToUpdate.join(', ')}
+    WHERE id = ${id}
+  `;
+
+  await sql.query(updateRequest);
+
+  return getRequestByIdAsync(id);
+}
+
 module.exports = {
   createRequestAsync,
   getAllRequestsAsync,
-  getRequestByIdAsync
+  getRequestByIdAsync,
+  updateRequestAsync
 };
