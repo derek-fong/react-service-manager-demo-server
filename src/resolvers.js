@@ -8,6 +8,7 @@ const {
   createRequestAsync,
   getAllRequestsAsync,
   getRequestByIdAsync,
+  getRequestsByStatusCountAsync,
   updateRequestAsync
 } = require('./requests.service');
 const { getUserByIdAsync } = require('./users.service');
@@ -31,6 +32,8 @@ module.exports = {
   Query: {
     allRequests: getAllRequestsAsync,
     request: (obj, { id }) => getRequestByIdAsync(id),
+    requestsByStatusCount: (obj, { status }) =>
+      getRequestsByStatusCountAsync(status),
     requestComments: (obj, { referenceId }) =>
       getCommentsByReferenceIdAsync(referenceId)
   },

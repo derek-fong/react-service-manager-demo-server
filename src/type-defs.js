@@ -213,6 +213,11 @@ module.exports = gql`
     Get request comments.
     """
     requestComments(referenceId: String!): [Comment]!
+
+    """
+    Number of requests with specified status.
+    """
+    requestsByStatusCount(status: [Status!]!): Int!
   }
 
   type Mutation {

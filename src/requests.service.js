@@ -1,4 +1,5 @@
 const { UserInputError } = require('apollo-server');
+const has = require('has');
 const sql = require('mssql');
 
 const { createCommentsAsync } = require('./comments.service');
@@ -89,6 +90,23 @@ async function getRequestByIdAsync(id) {
 }
 
 /**
+ * Get number of requests by status.
+ * @param {Status[]} status - A list of request status to be counted.
+ * @returns {number} Number of requests by status.
+ */
+async function getRequestsByStatusCountAsync(status) {
+  const requestsCount = `
+    SELECT COUNT(*) AS count
+    FROM requests
+    WHERE status IN (${status.map(s => "'" + s + "'").join(',')})
+  `;
+
+  const { recordset } = await sql.query(requestsCount);
+
+  return recordset[0] && has(recordset[0], 'count') ? recordset[0].count : 0;
+}
+
+/**
  * Update request.
  * @param {UpdateRequestInput} updateRequestInput - Details required to update a request.
  * @returns {Request} Updated request.
@@ -158,5 +176,6 @@ module.exports = {
   createRequestAsync,
   getAllRequestsAsync,
   getRequestByIdAsync,
+  getRequestsByStatusCountAsync,
   updateRequestAsync
 };
