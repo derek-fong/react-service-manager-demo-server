@@ -1,6 +1,10 @@
 const { GraphQLDateTime } = require('graphql-iso-date');
 
 const {
+  createCommentAsync,
+  getCommentsByReferenceIdAsync
+} = require('./comments.service');
+const {
   createRequestAsync,
   getAllRequestsAsync,
   getRequestByIdAsync,
@@ -10,6 +14,10 @@ const { getUserByIdAsync } = require('./users.service');
 
 module.exports = {
   DateTime: GraphQLDateTime,
+  Comment: {
+    createdAt: ({ created_at }) => created_at,
+    createdBy: ({ creator_id }) => getUserByIdAsync(creator_id)
+  },
   Request: {
     createdAt: ({ created_at }) => created_at,
     createdBy: ({ creator_id }) => getUserByIdAsync(creator_id),
@@ -22,9 +30,13 @@ module.exports = {
   },
   Query: {
     allRequests: getAllRequestsAsync,
-    request: (obj, { id }) => getRequestByIdAsync(id)
+    request: (obj, { id }) => getRequestByIdAsync(id),
+    requestComments: (obj, { referenceId }) =>
+      getCommentsByReferenceIdAsync(referenceId)
   },
   Mutation: {
+    createComment: (obj, { createCommentInput }) =>
+      createCommentAsync(createCommentInput),
     createRequest: (obj, { createRequestInput }) =>
       createRequestAsync(createRequestInput),
     updateRequest: (obj, { updateRequestInput }) =>

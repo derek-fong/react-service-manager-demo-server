@@ -13,5 +13,6 @@ module.exports = {
       user: process.env.DATABASE_MSSQL_USER
     }
   },
+  fakeCurrentUserId: process.env.FAKE_CURRENT_USER_ID,
   port: process.env.PORT || defaultPort
 };
