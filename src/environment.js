@@ -14,5 +14,10 @@ module.exports = {
     }
   },
   fakeCurrentUserId: process.env.FAKE_CURRENT_USER_ID,
+  // See: https://newsapi.org/s/australia-health-news-api
+  healthNews: {
+    apiKey: process.env.HEALTH_NEWS_API_KEY,
+    uri: process.env.HEALTH_NEWS_URI
+  },
   port: process.env.PORT || defaultPort
 };

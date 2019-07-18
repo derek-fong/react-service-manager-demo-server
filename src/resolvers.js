@@ -4,6 +4,7 @@ const {
   createCommentAsync,
   getCommentsByReferenceIdAsync
 } = require('./comments.service');
+const { getHealthNewsHeadlinesAsync } = require('./health-news.service');
 const {
   createRequestAsync,
   getAllRequestsAsync,
@@ -31,6 +32,7 @@ module.exports = {
   },
   Query: {
     allRequests: getAllRequestsAsync,
+    healthNewsHeadlines: getHealthNewsHeadlinesAsync,
     request: (obj, { id }) => getRequestByIdAsync(id),
     requestsByStatusCount: (obj, { status }) =>
       getRequestsByStatusCountAsync(status),
