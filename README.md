@@ -7,8 +7,10 @@ A simple service request management GraphQL server.
 
 ## Quick Start
 
-1. Install Node dependencies with `npm install`.
+1. Add environment variables outlined in [`environment.js`](https://github.com/derek-fong/react-service-manager-demo-server/blob/master/src/environment.js) on local machine, or specify the environment variables in a [`.env`](https://github.com/motdotla/dotenv) file in project root directory.
 
-2. Run the app in development mode `npm start`.
+2. Install Node dependencies with `npm install`.
 
-3. Open [http://localhost:4000](http://localhost:4000) to view GraphQL Playground in the browser.
+3. Run the app in development mode `npm start` (or `npm run start:env` if using [`.env`](https://github.com/motdotla/dotenv)).
+
+4. Open [http://localhost:4000](http://localhost:4000) to view GraphQL Playground in the browser.

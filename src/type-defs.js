@@ -69,6 +69,41 @@ module.exports = gql`
   }
 
   """
+  News headline.
+  """
+  type NewsHeadline {
+    """
+    News author.
+    """
+    author: String
+
+    """
+    News title.
+    """
+    title: String
+
+    """
+    News description.
+    """
+    description: String
+
+    """
+    News URL.
+    """
+    url: String
+
+    """
+    News URL to image.
+    """
+    urlToImage: String
+
+    """
+    News publication timestamp.
+    """
+    publishedAt: DateTime
+  }
+
+  """
   User.
   """
   type User {
@@ -203,6 +238,11 @@ module.exports = gql`
     Get all requests.
     """
     allRequests: [Request]!
+
+    """
+    Get health news headlines.
+    """
+    healthNewsHeadlines: [NewsHeadline]
 
     """
     Get request by ID.
