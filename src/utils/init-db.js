@@ -1,6 +1,39 @@
 const sql = require('mssql');
 
+const { createCommentsAsync } = require('../comments.service');
+const { fakeCurrentUserId } = require('../environment');
+
 // Utilities to initialize database.
+
+/**
+ * Create `comments` table.
+ */
+async function createCommentsTableAsync() {
+  const createCommentsTable = `
+    IF (
+      NOT EXISTS (
+        SELECT *
+        FROM INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_SCHEMA = 'dbo' AND
+              TABLE_NAME = 'comments'
+      )
+    )
+    BEGIN
+      CREATE TABLE comments (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        title VARCHAR(50) NOT NULL,
+        description VARCHAR(300) NOT NULL,
+        reference_id VARCHAR(20) NOT NULL,
+        created_at DATETIME NOT NULL,
+        creator_id VARCHAR(12) NOT NULL FOREIGN KEY REFERENCES users (id)
+          ON DELETE NO ACTION
+          ON UPDAtE NO ACTION
+      )
+    END
+  `;
+
+  await sql.query(createCommentsTable);
+}
 
 /**
  * Create `requests` table.
@@ -58,14 +91,59 @@ async function addMockRequestsAsync() {
         creator_id
       )
       VALUES
-        ('Test Request 1', 'Test request 1', 'REGISTERED', '${now}','he123456'),
-        ('Test Request 2', 'Test request 2', 'IN_PROGRESS', '${now}', 'he987654'),
-        ('Test Request 3', 'Test request 3', 'PENDING_CUSTOMER', '${now}', 'he123456'),
-        ('Test Request 4', 'Test request 4', 'FULFILLED', '${now}', 'he123456')
+        ('Test Request 1', 'Test request 1', 'REGISTERED', '${now}','${fakeCurrentUserId}'),
+        ('Test Request 2', 'Test request 2', 'IN_PROGRESS', '${now}', '${fakeCurrentUserId}'),
+        ('Test Request 3', 'Test request 3', 'PENDING_CUSTOMER', '${now}', '${fakeCurrentUserId}'),
+        ('Test Request 4', 'Test request 4', 'FULFILLED', '${now}', '${fakeCurrentUserId}')
     END
   `;
 
-  await sql.query(addMockRequests);
+  const { rowsAffected } = await sql.query(addMockRequests);
+
+  if (rowsAffected && rowsAffected.length > 0) {
+    await createCommentsAsync([
+      {
+        title: 'Created Request',
+        description: 'Request has been created',
+        referenceId: '1'
+      },
+      {
+        title: 'Updated Request Status',
+        description: `Request status set to "REGISTERED". `,
+        referenceId: '1'
+      },
+      {
+        title: 'Created Request',
+        description: 'Request has been created',
+        referenceId: '2'
+      },
+      {
+        title: 'Updated Request Status',
+        description: `Request status set to "IN_PROGRESS". `,
+        referenceId: '2'
+      },
+      {
+        title: 'Created Request',
+        description: 'Request has been created',
+        referenceId: '3'
+      },
+      {
+        title: 'Updated Request Status',
+        description: `Request status set to "PENDING_CUSTOMER". `,
+        referenceId: '3'
+      },
+      {
+        title: 'Created Request',
+        description: 'Request has been created',
+        referenceId: '4'
+      },
+      {
+        title: 'Updated Request Status',
+        description: `Request status set to "FULFILLED". `,
+        referenceId: '4'
+      }
+    ]);
+  }
 }
 
 /**
@@ -120,6 +198,7 @@ async function addMockUsersAsync() {
 async function initDbAsync() {
   await createUsersTableAsync();
   await addMockUsersAsync();
+  await createCommentsTableAsync();
   await createRequestsTableAsync();
   await addMockRequestsAsync();
 }

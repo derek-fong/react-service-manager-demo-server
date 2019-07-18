@@ -1,13 +1,13 @@
 const { UserInputError } = require('apollo-server');
 const sql = require('mssql');
 
-// Using a mock user ID for demo purpose only.
-const mockCurrentUserId = 'he123456';
+const { createCommentsAsync } = require('./comments.service');
+const { fakeCurrentUserId } = require('./environment');
 
 /**
  * Create request.
- * @param {RequestInput} requestInput - Request input. Contains `title`, `description` and `status`.
- * @returns {Request} New request.
+ * @param {CreateRequestInput} createRequestInput - Details required to create a request.
+ * @returns {Request} A new request.
  */
 async function createRequestAsync({ title, description, status }) {
   if (
@@ -18,7 +18,7 @@ async function createRequestAsync({ title, description, status }) {
     status &&
     typeof status === 'string'
   ) {
-    const creatorId = 'he123456';
+    const creatorId = fakeCurrentUserId;
     const now = new Date()
       .toISOString()
       .slice(0, 19)
@@ -36,8 +36,22 @@ async function createRequestAsync({ title, description, status }) {
       SELECT SCOPE_IDENTITY() as id
     `;
     const { recordset } = await sql.query(createRequest);
+    const requestId = `${recordset[0].id}`;
 
-    return getRequestByIdAsync(`${recordset[0].id}`);
+    await createCommentsAsync([
+      {
+        title: 'Created Request',
+        description: 'Request has been created. ',
+        referenceId: requestId
+      },
+      {
+        title: 'Updated Request Status',
+        description: `Request status set to "${status}". `,
+        referenceId: requestId
+      }
+    ]);
+
+    return getRequestByIdAsync(requestId);
   }
 }
 
@@ -76,7 +90,7 @@ async function getRequestByIdAsync(id) {
 
 /**
  * Update request.
- * @param {UpdateRequestInput} UpdateRequestInput - Details required to update a request.
+ * @param {UpdateRequestInput} updateRequestInput - Details required to update a request.
  * @returns {Request} Updated request.
  */
 async function updateRequestAsync({ description, id, status, title }) {
@@ -87,17 +101,33 @@ async function updateRequestAsync({ description, id, status, title }) {
   }
 
   let columnsToUpdate = [];
+  let comments = [];
+
+  if (title && title !== previousRequest.title) {
+    columnsToUpdate.push(`title = '${title}'`);
+    comments.push({
+      title: 'Updated Request Title',
+      description: `Request title changed from "${previousRequest.title}" to "${title}". `,
+      referenceId: `${id}`
+    });
+  }
 
   if (description && description !== previousRequest.description) {
     columnsToUpdate.push(`description = '${description}'`);
+    comments.push({
+      title: 'Updated Request Description',
+      description: `Request Description changed from "${previousRequest.description}" to "${description}". `,
+      referenceId: `${id}`
+    });
   }
 
   if (status && status !== previousRequest.status) {
     columnsToUpdate.push(`status = '${status}'`);
-  }
-
-  if (title && title !== previousRequest.title) {
-    columnsToUpdate.push(`title = '${title}'`);
+    comments.push({
+      title: 'Updated Request Status',
+      description: `Request status changed from "${previousRequest.status}" to "${status}". `,
+      referenceId: `${id}`
+    });
   }
 
   if (columnsToUpdate.length === 0) {
@@ -110,7 +140,7 @@ async function updateRequestAsync({ description, id, status, title }) {
     .replace('T', ' ');
 
   columnsToUpdate.push(`updated_at = '${now}'`);
-  columnsToUpdate.push(`updater_id = '${mockCurrentUserId}'`);
+  columnsToUpdate.push(`updater_id = '${fakeCurrentUserId}'`);
 
   const updateRequest = `
     UPDATE requests
@@ -119,6 +149,7 @@ async function updateRequestAsync({ description, id, status, title }) {
   `;
 
   await sql.query(updateRequest);
+  await createCommentsAsync(comments);
 
   return getRequestByIdAsync(id);
 }

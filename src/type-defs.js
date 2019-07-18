@@ -34,6 +34,41 @@ module.exports = gql`
   }
 
   """
+  Comment.
+  """
+  type Comment {
+    """
+    Comment ID.
+    """
+    id: ID!
+
+    """
+    Item ID that is comment is referring to.
+    """
+    referenceId: String!
+
+    """
+    Comment title.
+    """
+    title: String!
+
+    """
+    Comment description.
+    """
+    description: String!
+
+    """
+    Comment creation timestamp.
+    """
+    createdAt: DateTime!
+
+    """
+    Comment creator.
+    """
+    createdBy: User!
+  }
+
+  """
   User.
   """
   type User {
@@ -99,6 +134,26 @@ module.exports = gql`
   }
 
   """
+  Details required to create a comment.
+  """
+  input CreateCommentInput {
+    """
+    Item ID that is comment is referring to.
+    """
+    referenceId: String!
+
+    """
+    Comment title.
+    """
+    title: String!
+
+    """
+    Comment description.
+    """
+    description: String!
+  }
+
+  """
   Details required to create a new request.
   """
   input CreateRequestInput {
@@ -153,9 +208,19 @@ module.exports = gql`
     Get request by ID.
     """
     request(id: ID!): Request
+
+    """
+    Get request comments.
+    """
+    requestComments(referenceId: String!): [Comment]!
   }
 
   type Mutation {
+    """
+    Create a new comment.
+    """
+    createComment(createCommentInput: CreateCommentInput!): Comment!
+
     """
     Create a new request.
     """
