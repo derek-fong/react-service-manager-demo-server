@@ -1,9 +1,10 @@
 {
   "name": "react-service-manager-demo-server",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "scripts": {
+    "semantic-release": "semantic-release",
     "start": "node src/index.js",
     "start:env": "node --require dotenv/config src/index.js"
   },
@@ -27,6 +28,31 @@
   "prettier": {
     "singleQuote": true
   },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/npm",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "CHANGELOG.md",
+            "package.json"
+          ],
+          "message": "release: cut the ${nextRelease.version} release [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/github"
+    ],
+    "tagFormat": "${version}"
+  },
   "dependencies": {
     "apollo-server": "^2.6.8",
     "axios": "^0.19.0",
@@ -38,9 +64,12 @@
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/git": "^7.0.16",
     "dotenv": "^8.0.0",
     "husky": "^3.0.0",
     "lint-staged": "^9.0.2",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "semantic-release": "^15.13.18"
   }
 }
