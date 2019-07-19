@@ -1,0 +1,31 @@
+variables:
+  - group: semantic-release-github-wahealth
+
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: npm ci
+    displayName: 'Install NPM Packages'
+
+  - script: npm run semantic-release
+    displayName: 'Run Semantic Release'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+    displayName: 'Archive Artifacts'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+    displayName: 'Publish Build Artifacts'
