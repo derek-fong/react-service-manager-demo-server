@@ -54,7 +54,7 @@
     "tagFormat": "${version}"
   },
   "dependencies": {
-    "apollo-server": "^2.6.8",
+    "apollo-server": "^2.25.3",
     "axios": "^0.19.0",
     "graphql": "^14.4.2",
     "graphql-iso-date": "^3.6.1",
